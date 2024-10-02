@@ -5,10 +5,12 @@ function App() {
   const [message, setMessage] = useState('');
 
   useEffect(() => {
-    fetch('/api/message')  // calling the backend API
-      .then(res => res.json())
-      .then(data => setMessage(data.message));
+    fetch('http://localhost:8080/api/message')
+      .then(response => response.json())
+      .then(data => setMessage(data))
+      .catch(error => console.error('Error fetching data:', error));
   }, []);
+  
 
   return (
     <div className="App">
