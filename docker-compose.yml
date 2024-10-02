@@ -11,7 +11,13 @@ services:
     ports:
       - "5432:5432"                  # Expose PostgreSQL on port 5432
     volumes:
-      - pg_data:/var/lib/postgresql/data # Persist data
+      - ./db/data/postgresql:/var/lib/postgresql/data # Persist PostgreSQL data
+      - ./db/sql:/docker-entrypoint-initdb.d # Mount sql directory
+    healthcheck:
+      test: ["CMD", "pg_isready", "-U", "postgres"]
+      interval: 5s
+      timeout: 3s
+      retries: 5
 
   backend:
     build:
@@ -25,7 +31,8 @@ services:
     ports:
       - "8080:8080"                  # Expose backend on port 8080
     depends_on:
-      - db                            # Wait for the db service to start
+      db:
+        condition: service_healthy    # Wait until db is healthy
 
   frontend:
     build:
