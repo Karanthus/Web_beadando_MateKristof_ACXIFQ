@@ -1,68 +1,81 @@
 // src/components/Register.js
 import React, { useState } from 'react';
+import { Link, useNavigate } from 'react-router-dom';
 
 const Register = () => {
     const [username, setUsername] = useState('');
-    const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
+    const [email, setEmail] = useState('');
     const [error, setError] = useState('');
-    const [success, setSuccess] = useState('');
+    const navigate = useNavigate();
 
-    const handleSubmit = async (e) => {
+    const handleRegister = (e) => {
         e.preventDefault();
-        setError('');
-        setSuccess('');
+        setError(''); // Reset error message
 
-        const response = await fetch('http://localhost:8080/api/register', {
+        fetch('http://localhost:8080/api/auth/register', {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json',
             },
-            body: JSON.stringify({ username, email, password }),
+            body: JSON.stringify({ username, passwordHash: password, email }),
+        })
+        .then(response => {
+            if (response.ok) {
+                return response.json();
+            } else {
+                throw new Error('Registration failed');
+            }
+        })
+        .then(data => {
+            console.log('Registration successful:', data);
+            navigate('/login'); // Redirect to login after successful registration
+        })
+        .catch(err => {
+            setError(err.message);
         });
-
-        if (response.ok) {
-            setSuccess('Registration successful! You can now log in.');
-        } else {
-            setError('Registration failed. Please try again.');
-        }
     };
 
     return (
         <div>
             <h2>Register</h2>
             {error && <p style={{ color: 'red' }}>{error}</p>}
-            {success && <p style={{ color: 'green' }}>{success}</p>}
-            <form onSubmit={handleSubmit}>
-                <div>
-                    <label>Username:</label>
+            <form onSubmit={handleRegister}>
+                <label>
+                    Username:
                     <input 
                         type="text" 
                         value={username} 
                         onChange={(e) => setUsername(e.target.value)} 
-                        required
+                        required 
                     />
-                </div>
-                <div>
-                    <label>Email:</label>
+                </label>
+                <br />
+                <label>
+                    Email:
                     <input 
                         type="email" 
                         value={email} 
                         onChange={(e) => setEmail(e.target.value)} 
-                        required
+                        required 
                     />
-                </div>
-                <div>
-                    <label>Password:</label>
+                </label>
+                <br />
+                <label>
+                    Password:
                     <input 
                         type="password" 
                         value={password} 
                         onChange={(e) => setPassword(e.target.value)} 
-                        required
+                        required 
                     />
-                </div>
+                </label>
+                <br />
                 <button type="submit">Register</button>
             </form>
+            <p>
+                Already have an account? <Link to="/login">Login here</Link>
+            </p>
         </div>
     );
 };

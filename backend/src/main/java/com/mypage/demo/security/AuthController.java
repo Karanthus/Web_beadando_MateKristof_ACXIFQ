@@ -1,57 +1,52 @@
 package com.mypage.demo.security;
 
-import io.jsonwebtoken.Jwts;
-import io.jsonwebtoken.SignatureAlgorithm;
+import com.mypage.demo.model.User;
+import com.mypage.demo.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.authentication.AuthenticationManager;
-import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
-import org.springframework.security.core.Authentication;
-import org.springframework.security.core.AuthenticationException;
-import org.springframework.security.core.context.SecurityContextHolder;
-import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import java.util.Date;
-import java.util.HashMap;
-import java.util.Map;
+import java.util.Optional;
 
 @RestController
+@RequestMapping("/api/auth")
 public class AuthController {
 
     @Autowired
-    private AuthenticationManager authenticationManager;
+    private UserRepository userRepository;
 
     @Autowired
-    private PasswordEncoder passwordEncoder;
+    private BCryptPasswordEncoder passwordEncoder;
 
-    @PostMapping("/api/login")
-    public ResponseEntity<?> login(@RequestBody Map<String, String> loginRequest) {
-        try {
-            Authentication authentication = authenticationManager.authenticate(
-                    new UsernamePasswordAuthenticationToken(
-                            loginRequest.get("username"),
-                            loginRequest.get("password")
-                    )
-            );
+    @PostMapping("/register")
+    public ResponseEntity<?> register(@RequestBody User user) {
+        // Hash the password
+        user.setPasswordHash(passwordEncoder.encode(user.getPasswordHash()));
+        User savedUser = userRepository.save(user);
 
-            SecurityContextHolder.getContext().setAuthentication(authentication);
+        // Create a success response with the saved user details
+        return ResponseEntity.ok(savedUser); // Return the saved user as JSON
+    }
 
-            // Generate JWT token
-            String token = Jwts.builder()
-                    .setSubject(authentication.getName())
-                    .setExpiration(new Date(System.currentTimeMillis() + 864_000_000)) // 10 days
-                    .signWith(SignatureAlgorithm.HS512, "SecretKeyToGenerateJWTs") // Use environment variable instead
-                    .compact();
+    @PostMapping("/login")
+    public ResponseEntity<?> login(@RequestBody User user) {
+        // Find the user by username
+        Optional<User> optionalUser = userRepository.findByUsername(user.getUsername());
 
-            Map<String, String> response = new HashMap<>();
-            response.put("token", token);
-            return ResponseEntity.ok(response);
-        } catch (AuthenticationException e) {
-            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("Invalid username or password");
+        if (optionalUser.isPresent()) {
+            User foundUser = optionalUser.get(); // Safely get the User object
+            // Now you can check the password and return an appropriate response
+            if (passwordEncoder.matches(user.getPasswordHash(), foundUser.getPasswordHash())) {
+                return ResponseEntity.ok("Login successful"); // You might want to return a token here
+            } else {
+                return ResponseEntity.status(401).body("Invalid password"); // Return 401 status for invalid password
+            }
+        } else {
+            return ResponseEntity.status(404).body("User not found"); // Return 404 if user doesn't exist
         }
     }
 }

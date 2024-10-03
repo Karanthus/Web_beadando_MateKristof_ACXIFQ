@@ -7,7 +7,7 @@ const Admin = () => {
         name: '',
         description: '',
         price: '',
-        stock_quantity: '',
+        stockQuantity: '',
     });
 
     // State for updating a product
@@ -60,7 +60,7 @@ const Admin = () => {
                 name: '',
                 description: '',
                 price: '',
-                stock_quantity: '',
+                stockQuantity: '',
             });
             fetchProducts(); // Refetch products after adding a new one
         })
@@ -107,7 +107,7 @@ const Admin = () => {
                 name: '',
                 description: '',
                 price: '',
-                stock_quantity: '',
+                stockQuantity: '',
             });
             fetchProducts(); // Refetch products after updating
         })
@@ -178,8 +178,8 @@ const Admin = () => {
                         Stock Quantity:
                         <input
                             type="number"
-                            name="stock_quantity"
-                            value={newProduct.stock_quantity}
+                            name="stockQuantity"
+                            value={newProduct.stockQuantity}
                             onChange={handleNewProductChange}
                             required
                         />
@@ -238,7 +238,7 @@ const Admin = () => {
                         Stock Quantity:
                         <input
                             type="number"
-                            name="stock_quantity"
+                            name="stockQuantity"
                             value={updateProduct.stockQuantity}
                             onChange={(e) => setUpdateProduct({ ...updateProduct, stockQuantity: e.target.value })}
                             required
