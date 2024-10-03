@@ -19,30 +19,5 @@ services:
       timeout: 3s
       retries: 5
 
-  backend:
-    build:
-      context: ./backend             # Path to your backend Dockerfile
-      dockerfile: Dockerfile          # Specify the Dockerfile name
-    container_name: spring_backend
-    environment:
-      SPRING_DATASOURCE_URL: jdbc:postgresql://db:5432/school
-      SPRING_DATASOURCE_USERNAME: postgres
-      SPRING_DATASOURCE_PASSWORD: yourpassword # Must match the DB password
-    ports:
-      - "8080:8080"                  # Expose backend on port 8080
-    depends_on:
-      db:
-        condition: service_healthy    # Wait until db is healthy
-
-  frontend:
-    build:
-      context: ./frontend            # Path to your frontend Dockerfile
-      dockerfile: Dockerfile          # Specify the Dockerfile name
-    container_name: frontend_app
-    ports:
-      - "3000:3000"                  # Expose frontend on port 3000
-    depends_on:
-      - backend                       # Wait for the backend service to start
-
 volumes:
   pg_data:                           # Named volume for PostgreSQL data
