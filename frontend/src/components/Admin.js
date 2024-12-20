@@ -1,8 +1,8 @@
 import React, { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
+import './Admin.css';
 
 const Admin = () => {
-    // State for creating a new product
     const [newProduct, setNewProduct] = useState({
         name: '',
         description: '',
@@ -10,7 +10,6 @@ const Admin = () => {
         stockQuantity: '',
     });
 
-    // State for updating a product
     const [updateProduct, setUpdateProduct] = useState({
         product_id: '',
         name: '',
@@ -19,22 +18,16 @@ const Admin = () => {
         stockQuantity: '',
     });
 
-    // State for all products
     const [products, setProducts] = useState([]);
-
-    // State for selected product ID
     const [selectedProductId, setSelectedProductId] = useState('');
 
-    // Fetch products from the backend
     useEffect(() => {
-        fetch('http://localhost:8080/api/products') // Ensure you have the correct URL
+        fetch('http://localhost:8080/api/products')
             .then(response => response.json())
             .then(data => setProducts(data))
             .catch(error => console.error('Error fetching products:', error));
-            
     }, []);
 
-    // Handle input change for creating a new product
     const handleNewProductChange = (e) => {
         setNewProduct({
             ...newProduct,
@@ -42,7 +35,6 @@ const Admin = () => {
         });
     };
 
-    // Function for creating a new product (POST request)
     const handleNewProductSubmit = (e) => {
         e.preventDefault();
 
@@ -53,26 +45,24 @@ const Admin = () => {
             },
             body: JSON.stringify(newProduct),
         })
-        .then(response => response.json())
-        .then(data => {
-            console.log("New product added: ", data);
-            setNewProduct({
-                name: '',
-                description: '',
-                price: '',
-                stockQuantity: '',
+            .then(response => response.json())
+            .then(data => {
+                console.log("New product added: ", data);
+                setNewProduct({
+                    name: '',
+                    description: '',
+                    price: '',
+                    stockQuantity: '',
+                });
+                fetchProducts();
+            })
+            .catch((error) => {
+                console.error('Error adding product:', error);
             });
-            fetchProducts(); // Refetch products after adding a new one
-        })
-        .catch((error) => {
-            console.error('Error adding product:', error);
-        });
     };
 
-    // Function for filling input fields with selected product data
     const fillTextFields = () => {
         const selectedProduct = products.find(product => product.name === selectedProductId);
-        console.log("Products:", products); // Log all products
         if (selectedProduct) {
             setUpdateProduct({
                 productId: selectedProduct.productId,
@@ -81,17 +71,13 @@ const Admin = () => {
                 price: selectedProduct.price,
                 stockQuantity: selectedProduct.stockQuantity,
             });
-            console.log("updateProduct values:", updateProduct); // Log selected product ID
-            console.log("Filled fields with selected product:", selectedProduct); // Log filled data
         } else {
-            console.warn("No product found with ID:", selectedProductId); // Warning if no product found
+            console.warn("No product found with ID:", selectedProductId);
         }
     };
 
-    // Function for updating an existing product (PUT request)
     const handleUpdateProductSubmit = (e) => {
         e.preventDefault();
-        console.log("Updating product with ID:", updateProduct);
         fetch(`http://localhost:8080/api/products/${updateProduct.productId}`, {
             method: 'PUT',
             headers: {
@@ -99,24 +85,23 @@ const Admin = () => {
             },
             body: JSON.stringify(updateProduct),
         })
-        .then(response => response.json())
-        .then(data => {
-            console.log("Product updated: ", data);
-            setUpdateProduct({
-                product_id: '',
-                name: '',
-                description: '',
-                price: '',
-                stockQuantity: '',
+            .then(response => response.json())
+            .then(data => {
+                console.log("Product updated: ", data);
+                setUpdateProduct({
+                    product_id: '',
+                    name: '',
+                    description: '',
+                    price: '',
+                    stockQuantity: '',
+                });
+                fetchProducts();
+            })
+            .catch((error) => {
+                console.error('Error updating product:', error);
             });
-            fetchProducts(); // Refetch products after updating
-        })
-        .catch((error) => {
-            console.error('Error updating product:', error);
-        });
     };
 
-    // Function to fetch products
     const fetchProducts = () => {
         fetch('http://localhost:8080/api/products')
             .then(response => response.json())
@@ -126,7 +111,6 @@ const Admin = () => {
 
     return (
         <div>
-            {/* Navigation Menu */}
             <nav>
                 <ul>
                     <li><Link to="/">Home</Link></li>
@@ -136,13 +120,11 @@ const Admin = () => {
                 </ul>
             </nav>
 
-            {/* Admin Dashboard Content */}
             <div>
                 <h2>Admin Dashboard</h2>
                 <p>Welcome, Admin! This is your control panel.</p>
             </div>
 
-            {/* Create New Product */}
             <div>
                 <h2>Add New Product</h2>
                 <form onSubmit={handleNewProductSubmit}>
@@ -188,8 +170,7 @@ const Admin = () => {
                 </form>
             </div>
 
-            {/* Dropdown to select product for updating */}
-            <div>
+            <div className="update-product-container">
                 <h2>Update Product</h2>
                 <label>
                     Select Product:
@@ -201,10 +182,9 @@ const Admin = () => {
                             </option>
                         ))}
                     </select>
-                    <button onClick={fillTextFields}>Fill Fields</button>
                 </label>
+                <button onClick={fillTextFields}>Fill Fields</button>
 
-                {/* Input fields to edit selected product */}
                 <form onSubmit={handleUpdateProductSubmit}>
                     <label>
                         Name:

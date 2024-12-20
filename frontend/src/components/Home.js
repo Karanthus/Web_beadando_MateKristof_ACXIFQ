@@ -1,5 +1,7 @@
 import React, { useState } from 'react';
 import { Link } from 'react-router-dom';
+import './Home.css';
+
 
 const Home = () => {
     // Example state for user role (this could come from props, context, or API)
