@@ -104,6 +104,24 @@ const Admin = () => {
             });
     };
 
+    const handleDeleteProduct = () => {
+        if (!updateProduct.productId) return;
+
+        fetch(`http://localhost:8080/api/products/${updateProduct.productId}`, {
+            method: 'DELETE',
+        })
+            .then(response => {
+                if (response.ok) {
+                    console.log("Product deleted successfully");
+                    fetchProducts();
+                    setSelectedProductId('');
+                } else {
+                    console.error("Error deleting product");
+                }
+            })
+            .catch(error => console.error('Error deleting product:', error));
+    };
+
     const fetchProducts = () => {
         fetch('http://localhost:8080/api/products')
             .then(response => response.json())
@@ -180,6 +198,7 @@ const Admin = () => {
                     </select>
                 </label>
                 <button onClick={fillTextFields} disabled={!selectedProductId}>Fill Fields</button>
+                
 
                 <form onSubmit={handleUpdateProductSubmit}>
                     <label>
@@ -221,6 +240,7 @@ const Admin = () => {
                         />
                     </label>
                     <button type="submit">Update Product</button>
+                    <button onClick={handleDeleteProduct} disabled={!selectedProductId} style={{backgroundColor: 'red'}}>Delete Product</button>
                 </form>
             </div>
         </div>

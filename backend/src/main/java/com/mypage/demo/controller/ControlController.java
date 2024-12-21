@@ -48,4 +48,15 @@ public class ControlController {
         Product updatedProduct = productRepository.save(product);
         return ResponseEntity.ok(updatedProduct);
     }
+
+    // Delete a product
+    @DeleteMapping("/products/{id}")
+    public ResponseEntity<Void> deleteProduct(@PathVariable Long id) {
+        if (!productRepository.existsById(id)) {
+            return ResponseEntity.notFound().build();
+        }
+
+        productRepository.deleteById(id);
+        return ResponseEntity.noContent().build();
+    }
 }
