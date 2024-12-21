@@ -154,7 +154,8 @@ const Admin = () => {
                     </label>
                     <label>
                         Description:
-                        <textarea
+                        <input
+                            type='text'
                             name="description"
                             value={newProduct.description}
                             onChange={handleNewProductChange}
@@ -213,7 +214,8 @@ const Admin = () => {
                     </label>
                     <label>
                         Description:
-                        <textarea
+                        <input
+                            type='text'
                             name="description"
                             value={updateProduct.description}
                             onChange={(e) => setUpdateProduct({ ...updateProduct, description: e.target.value })}

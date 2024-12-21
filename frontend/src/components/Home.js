@@ -13,7 +13,7 @@ const Home = () => {
             <NavBar isAdmin={isAdmin} />  {/* Pass the isAdmin prop to the NavBar */}
 
             <h1>Welcome to the Home Page</h1>
-            <p>This is a sample home page for your webshop.</p>
+            <p>This is the POC for your website.</p>
         </div>
     );
 };
