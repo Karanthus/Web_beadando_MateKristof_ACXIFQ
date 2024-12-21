@@ -1,6 +1,6 @@
 // src/components/Products.js
 import React, { useEffect, useState } from 'react';
-import { Link } from 'react-router-dom';
+import NavBar from './NavBar'; // Import the NavBar component
 import './Products.css';
 
 const Products = () => {
@@ -16,16 +16,7 @@ const Products = () => {
 
     return (
         <div>
-            {/* Navigation Menu */}
-            <nav>
-                <ul>
-                    <li><Link to="/">Home</Link></li>
-                    <li><Link to="/login">Login/Register</Link></li>
-                    {/* Conditionally render the Admin link if the user is an admin */}
-                    {isAdmin && <li><Link to="/admin">Admin Page</Link></li>}
-                    
-                </ul>
-            </nav>
+            <NavBar isAdmin={isAdmin} /> {/* Use the NavBar component */}
             <h2>Product List</h2>
             <table>
                 <thead>

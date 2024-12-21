@@ -1,7 +1,8 @@
 // src/components/Login.js
 import React, { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
-import './Login.css'
+import NavBar from './NavBar'; // Import the NavBar component
+import './Login.css';
 
 const Login = () => {
     const [username, setUsername] = useState('');
@@ -40,6 +41,7 @@ const Login = () => {
 
     return (
         <div>
+            <NavBar isAdmin={false} /> {/* Use the NavBar component */}
             <h2>Login</h2>
             {error && <p style={{ color: 'red' }}>{error}</p>}
             <form onSubmit={handleLogin}>

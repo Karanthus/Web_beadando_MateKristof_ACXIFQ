@@ -1,5 +1,7 @@
+// src/components/Admin.js
 import React, { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
+import NavBar from './NavBar'; // Import the NavBar component
 import './Admin.css';
 
 const Admin = () => {
@@ -111,21 +113,15 @@ const Admin = () => {
 
     return (
         <div>
-            <nav>
-                <ul>
-                    <li><Link to="/">Home</Link></li>
-                    <li><Link to="/login">Login</Link></li>
-                    <li><Link to="/register">Register</Link></li>
-                    <li><Link to="/products">Products</Link></li>
-                </ul>
-            </nav>
+            {/* Navigation Bar */}
+            <NavBar isAdmin={true} /> {/* Set isAdmin to true as it's the Admin page */}
 
             <div>
                 <h2>Admin Dashboard</h2>
                 <p>Welcome, Admin! This is your control panel.</p>
             </div>
 
-            <div>
+            <div className="update-product-container">
                 <h2>Add New Product</h2>
                 <form onSubmit={handleNewProductSubmit}>
                     <label>
@@ -183,7 +179,7 @@ const Admin = () => {
                         ))}
                     </select>
                 </label>
-                <button onClick={fillTextFields}>Fill Fields</button>
+                <button onClick={fillTextFields} disabled={!selectedProductId}>Fill Fields</button>
 
                 <form onSubmit={handleUpdateProductSubmit}>
                     <label>
@@ -228,6 +224,7 @@ const Admin = () => {
                 </form>
             </div>
         </div>
+
     );
 };
 

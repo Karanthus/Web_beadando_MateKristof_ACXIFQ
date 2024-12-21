@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { Link } from 'react-router-dom';
 import './Home.css';
-
+import NavBar from './NavBar'; // Import the NavBar component
 
 const Home = () => {
     // Example state for user role (this could come from props, context, or API)
@@ -9,19 +9,11 @@ const Home = () => {
 
     return (
         <div>
+            {/* Add NavBar here */}
+            <NavBar isAdmin={isAdmin} />  {/* Pass the isAdmin prop to the NavBar */}
+
             <h1>Welcome to the Home Page</h1>
             <p>This is a sample home page for your webshop.</p>
-            
-            <nav>
-                <ul>
-                    <li><Link to="/login">Login</Link></li>
-                    <li><Link to="/register">Register</Link></li>
-                    <li><Link to="/products">Products</Link></li>
-                    
-                    {/* Conditionally render the Admin link if the user is an admin */}
-                    {isAdmin && <li><Link to="/admin">Admin Page</Link></li>}
-                </ul>
-            </nav>
         </div>
     );
 };
