@@ -11,8 +11,8 @@ services:
     ports:
       - "5432:5432"                  # Expose PostgreSQL on port 5432
     volumes:
-      - ./db/data/postgresql:/var/lib/postgresql/data # Persist PostgreSQL data
-      - ./db/sql:/docker-entrypoint-initdb.d # Mount sql directory
+      - ./db/data:/var/lib/postgresql/data
+      - ./db/sql:/docker-entrypoint-initdb.d/ # Load init scripts
     healthcheck:
       test: ["CMD", "pg_isready", "-U", "postgres"]
       interval: 5s
