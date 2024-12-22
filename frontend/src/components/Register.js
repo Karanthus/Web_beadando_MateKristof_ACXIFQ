@@ -1,6 +1,7 @@
 // src/components/Register.js
 import React, { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
+import NavBar from "./NavBar";
 
 const Register = () => {
     const [username, setUsername] = useState('');
@@ -8,6 +9,7 @@ const Register = () => {
     const [email, setEmail] = useState('');
     const [error, setError] = useState('');
     const navigate = useNavigate();
+    const [isAdmin, setIsAdmin] = useState(true); // Set to true for demo, replace with actual logic
 
     const handleRegister = (e) => {
         e.preventDefault();
@@ -38,6 +40,7 @@ const Register = () => {
 
     return (
         <div>
+            <NavBar isAdmin={isAdmin} /> {/* Use the NavBar component */}
             <h2>Register</h2>
             {error && <p style={{ color: 'red' }}>{error}</p>}
             <form onSubmit={handleRegister}>
